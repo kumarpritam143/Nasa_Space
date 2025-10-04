@@ -142,47 +142,80 @@ const InputPanel = ({ onSimulate, isSimulating }) => {
               )}
             </TabsContent>
 
-            {/* Custom Input */}
-            <TabsContent value="custom" className="space-y-4">
-              <div>
-                <Label>Asteroid Name (Optional)</Label>
-                <Input placeholder="Enter asteroid name..." value={customParams.name} onChange={e => updateCustomParam('name', e.target.value)} />
-              </div>
-              <div>
-                <Label>Asteroid Diameter (meters) *</Label>
-                <Input type="number" placeholder="e.g., 100" value={customParams.diameter} onChange={e => updateCustomParam('diameter', Number(e.target.value))} min={1} />
-              </div>
-              <div>
-                <Label>Impact Velocity (km/s) *</Label>
-                <Input type="number" placeholder="e.g., 15.5" value={customParams.velocity} onChange={e => updateCustomParam('velocity', Number(e.target.value))} min={1} />
-              </div>
-              <div>
-                <Label>Impact Angle: {customParams.angle}° from horizontal</Label>
-                <Select value={customParams.angle} onValueChange={value => updateCustomParam('angle', Number(value))}>
-                  <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value={5}>5° (grazing)</SelectItem>
-                    <SelectItem value={45}>45° (optimal)</SelectItem>
-                    <SelectItem value={90}>90° (vertical)</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+         {/* Custom Input */}
+<TabsContent value="custom" className="space-y-4">
+  <div>
+    <Label>Asteroid Name (Optional)</Label>
+    <Input
+      placeholder="Enter asteroid name..."
+      value={customParams.name}
+      onChange={e => updateCustomParam('name', e.target.value)}
+    />
+  </div>
 
-              <div className="p-4 bg-green-50 rounded-lg border border-green-200 space-y-1 text-sm text-green-800">
-                <h4 className="font-medium">Estimated Impact Physics:</h4>
-                {(() => {
-                  const physics = calculateImpactPhysics(customParams.diameter, customParams.velocity, customParams.angle);
-                  return (
-                    <>
-                      <div>Impact Energy: {physics.impactEnergy.toLocaleString()} J</div>
-                      <div>Crater Diameter: {physics.craterDiameter} km</div>
-                      <div>Affected Radius: {physics.affectedRadius} km</div>
-                      <div>TNT Equivalent: {physics.tntEquivalent} tons</div>
-                    </>
-                  );
-                })()}
-              </div>
-            </TabsContent>
+  <div>
+    <Label>Asteroid Diameter (meters) *</Label>
+    <Input
+      type="number"
+      placeholder="e.g., 100"
+      value={customParams.diameter}
+      onChange={e => updateCustomParam('diameter', Number(e.target.value))}
+      min={1}
+    />
+    {customParams.diameter < 1 && (
+      <p className="text-xs text-red-600 mt-1">
+        Minimum diameter is 1 m. Values below 1 will be set to 1 automatically.
+      </p>
+    )}
+  </div>
+
+  <div>
+    <Label>Impact Velocity (km/s) *</Label>
+    <Input
+      type="number"
+      placeholder="e.g., 15.5"
+      value={customParams.velocity}
+      onChange={e => updateCustomParam('velocity', Number(e.target.value))}
+      min={1}
+    />
+    {customParams.velocity < 1 && (
+      <p className="text-xs text-red-600 mt-1">
+        Minimum velocity is 1 km/s. Values below 1 will be set to 1 automatically.
+      </p>
+    )}
+  </div>
+
+  <div>
+    <Label>Impact Angle: {customParams.angle}° from horizontal</Label>
+    <Select value={customParams.angle} onValueChange={value => updateCustomParam('angle', Number(value))}>
+      <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
+      <SelectContent>
+        <SelectItem value={5}>5° (grazing)</SelectItem>
+        <SelectItem value={45}>45° (optimal)</SelectItem>
+        <SelectItem value={90}>90° (vertical)</SelectItem>
+      </SelectContent>
+    </Select>
+  </div>
+
+  <div className="p-4 bg-green-50 rounded-lg border border-green-200 space-y-1 text-sm text-green-800">
+    <h4 className="font-medium">Estimated Impact Physics:</h4>
+    {(() => {
+      // Ensure safe minimums
+      const safeDiameter = Math.max(1, customParams.diameter);
+      const safeVelocity = Math.max(1, customParams.velocity);
+      const physics = calculateImpactPhysics(safeDiameter, safeVelocity, customParams.angle);
+      return (
+        <>
+          <div>Impact Energy: {physics.impactEnergy.toLocaleString()} J</div>
+          <div>Crater Diameter: {physics.craterDiameter} km</div>
+          <div>Affected Radius: {physics.affectedRadius} km</div>
+          <div>TNT Equivalent: {physics.tntEquivalent} tons</div>
+        </>
+      );
+    })()}
+  </div>
+</TabsContent>
+
           </Tabs>
 
           <div className="pt-6 border-t">
