@@ -122,10 +122,10 @@ const AsteroidSimulator = () => {
       <footer className="bg-slate-800 border-t border-slate-700 px-6 py-3">
         <div className="flex items-center justify-between text-sm">
           <div className="text-slate-400">
-            Built with React, Leaflet.js, and NASA NEO API
+            Built and Develop by Pritam and Team
           </div>
           <div className="text-slate-500">
-            Physics calculations are simplified for demonstration purposes
+            Physics computations are streamlined for clarity and learning
           </div>
         </div>
       </footer>
