@@ -13,17 +13,24 @@ const InputPanel = ({ onSimulate, isSimulating }) => {
   const [selectedAsteroid, setSelectedAsteroid] = useState('');
   const [customParams, setCustomParams] = useState({ name: '', diameter: 100, velocity: 15, angle: 45 });
   const [neoAsteroids, setNeoAsteroids] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Fetch NASA NEO data (live)
   useEffect(() => {
     const fetchNeoAsteroids = async () => {
       try {
-        const today = new Date().toISOString().split('T')[0];
-        const apiKey = '1g8EgTht6M3OZXy7wU3coOJAZIV8K8WEcHe1ZGhc'; // Replace with your NASA API key
+        setLoading(true);
+        const today = new Date();
+        const endDate = today.toISOString().split('T')[0];
+        const startDateObj = new Date();
+        startDateObj.setDate(today.getDate() - 6); // last 7 days including today
+        const startDate = startDateObj.toISOString().split('T')[0];
+
+        const apiKey = '1g8EgTht6M3OZXy7wU3coOJAZIV8K8WEcHe1ZGhc'; // replace with your NASA API key
         const res = await fetch(
-          `https://api.nasa.gov/neo/rest/v1/feed?start_date=${today}&end_date=${today}&api_key=${apiKey}`
+          `https://api.nasa.gov/neo/rest/v1/feed?start_date=${startDate}&end_date=${endDate}&api_key=${apiKey}`
         );
         const data = await res.json();
+
         const asteroids = [];
         Object.values(data.near_earth_objects).forEach(arr => {
           arr.forEach(a => {
@@ -46,8 +53,10 @@ const InputPanel = ({ onSimulate, isSimulating }) => {
           });
         });
         setNeoAsteroids(asteroids);
+        setLoading(false);
       } catch (err) {
         console.error('Error fetching NEO data:', err);
+        setLoading(false);
       }
     };
     fetchNeoAsteroids();
@@ -64,9 +73,7 @@ const InputPanel = ({ onSimulate, isSimulating }) => {
     }
   };
 
-  const updateCustomParam = (key, value) => {
-    setCustomParams(prev => ({ ...prev, [key]: value }));
-  };
+  const updateCustomParam = (key, value) => setCustomParams(prev => ({ ...prev, [key]: value }));
 
   return (
     <div className="h-full bg-gradient-to-br from-slate-50 to-slate-100 p-6 overflow-y-auto">
@@ -91,24 +98,29 @@ const InputPanel = ({ onSimulate, isSimulating }) => {
               </TabsTrigger>
             </TabsList>
 
-            {/* NASA Asteroids Tab */}
+            {/* NASA Asteroids */}
             <TabsContent value="asteroid" className="space-y-4">
-              <div className="space-y-2">
-                <Label className="text-sm font-medium text-gray-700">Select Asteroid</Label>
-                <Select value={selectedAsteroid} onValueChange={setSelectedAsteroid}>
-                  <SelectTrigger className="w-full"><SelectValue placeholder="Choose an asteroid..." /></SelectTrigger>
-                  <SelectContent>
-                    {neoAsteroids.map(a => (
-                      <SelectItem key={a.id} value={a.id}>
-                        <div className="flex flex-col">
-                          <span className="font-medium">{a.name}</span>
-                          <span className="text-xs text-gray-500">{a.diameter}m • {a.velocity} km/s</span>
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+              {loading && <p className="text-sm text-gray-500">Loading last 7 days asteroids...</p>}
+
+              {!loading && neoAsteroids.length > 0 && (
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium text-gray-700">Select Asteroid</Label>
+                  <Select value={selectedAsteroid} onValueChange={setSelectedAsteroid}>
+                    <SelectTrigger className="w-full"><SelectValue placeholder="Choose an asteroid..." /></SelectTrigger>
+                    <SelectContent>
+                      {neoAsteroids.map(a => (
+                        <SelectItem key={a.id} value={a.id}>
+                          <div className="flex flex-col">
+                            <span className="font-medium">{a.name}</span>
+                            <span className="text-xs text-gray-500">{a.diameter}m • {a.velocity} km/s • {a.close_approach_date}</span>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+
               {selectedAsteroid && (
                 <div className="p-4 bg-blue-50 rounded-lg border border-blue-200 space-y-1 text-sm text-blue-800">
                   {(() => {
@@ -130,37 +142,19 @@ const InputPanel = ({ onSimulate, isSimulating }) => {
               )}
             </TabsContent>
 
-            {/* Custom Input Tab */}
+            {/* Custom Input */}
             <TabsContent value="custom" className="space-y-4">
               <div>
                 <Label>Asteroid Name (Optional)</Label>
-                <Input
-                  placeholder="Enter asteroid name..."
-                  value={customParams.name}
-                  onChange={e => updateCustomParam('name', e.target.value)}
-                />
+                <Input placeholder="Enter asteroid name..." value={customParams.name} onChange={e => updateCustomParam('name', e.target.value)} />
               </div>
               <div>
                 <Label>Asteroid Diameter (meters) *</Label>
-                <Input
-                  type="number"
-                  placeholder="e.g., 100"
-                  value={customParams.diameter}
-                  onChange={e => updateCustomParam('diameter', Number(e.target.value))}
-                  min={1}
-                />
-                <p className="text-xs text-gray-500 mt-1">Diameter: Size of the asteroid. Larger objects cause more damage.</p>
+                <Input type="number" placeholder="e.g., 100" value={customParams.diameter} onChange={e => updateCustomParam('diameter', Number(e.target.value))} min={1} />
               </div>
               <div>
                 <Label>Impact Velocity (km/s) *</Label>
-                <Input
-                  type="number"
-                  placeholder="e.g., 15.5"
-                  value={customParams.velocity}
-                  onChange={e => updateCustomParam('velocity', Number(e.target.value))}
-                  min={1}
-                />
-                <p className="text-xs text-gray-500 mt-1">Velocity: Typical Earth impact velocities range from 11-70 km/s.</p>
+                <Input type="number" placeholder="e.g., 15.5" value={customParams.velocity} onChange={e => updateCustomParam('velocity', Number(e.target.value))} min={1} />
               </div>
               <div>
                 <Label>Impact Angle: {customParams.angle}° from horizontal</Label>
@@ -172,7 +166,6 @@ const InputPanel = ({ onSimulate, isSimulating }) => {
                     <SelectItem value={90}>90° (vertical)</SelectItem>
                   </SelectContent>
                 </Select>
-                <p className="text-xs text-gray-500 mt-1">Impact Angle: 45° produces maximum crater size. Shallow angles create elliptical craters.</p>
               </div>
 
               <div className="p-4 bg-green-50 rounded-lg border border-green-200 space-y-1 text-sm text-green-800">
@@ -193,14 +186,9 @@ const InputPanel = ({ onSimulate, isSimulating }) => {
           </Tabs>
 
           <div className="pt-6 border-t">
-            <Button
-              onClick={handleSimulate}
-              disabled={isSimulating || (inputMode === 'asteroid' && !selectedAsteroid)}
-              className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 transition-all duration-200 transform hover:scale-105 disabled:transform-none"
-            >
+            <Button onClick={handleSimulate} disabled={isSimulating || (inputMode === 'asteroid' && !selectedAsteroid)} className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 transition-all duration-200 transform hover:scale-105 disabled:transform-none">
               {isSimulating ? 'Simulating Impact...' : 'Simulate Impact'}
             </Button>
-            <p className="text-xs text-gray-500 text-center mt-2">Click on the map to select impact location</p>
           </div>
         </CardContent>
       </Card>
