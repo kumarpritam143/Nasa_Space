@@ -1,70 +1,41 @@
-# Getting Started with Create React App
+# ☄️ NASA Asteroid Impact Simulation App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+![Status](https://img.shields.io/badge/Status-Active-brightgreen.svg)
+![Tech](https://img.shields.io/badge/Built%20With-React%20%7C%20Tailwind%20CSS%20%7C%20Leaflet-blue)
 
-## Available Scripts
+A powerful web application that simulates **asteroid impacts on Earth** using live data from the **NASA Near-Earth Object (NEO) API**.  
+It visualizes the impact location, crater size, affected population, and more — all in real time 🌍💥
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 🚀 Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- 🌐 **Live NASA NEO API integration** – Fetches real asteroid data in real time.  
+- 🗺️ **Interactive World Map** – Click anywhere to simulate asteroid impact on that location.  
+- 💣 **Physics-based calculations** – Estimates crater diameter, impact energy, and TNT equivalent.  
+- 👥 **Population estimation** – Predicts human population affected by the impact zone.  
+- 🎨 **Modern UI/UX** – Built with React, Tailwind CSS, and shadcn/ui components.  
+- 🔒 **Environment variable support** – Securely stores API keys in `.env`.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## 🛠️ Tech Stack
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **Frontend:** React.js (CRA)
+- **Styling:** Tailwind CSS + shadcn/ui
+- **Map:** Leaflet.js (OpenStreetMap tiles)
+- **API:** NASA NEO REST API
+- **State Management:** React Hooks
+- **Utilities:** Custom physics calculations (mass, energy, crater size)
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 📦 Installation & Setup
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Follow these steps to run the project locally 👇
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### 1️⃣ Clone the repository
+```bash
+git clone https://github.com/kumarpritam143/Nasa_Space.git
+cd Nasa_Space
